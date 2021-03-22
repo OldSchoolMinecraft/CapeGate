@@ -1,0 +1,29 @@
+plugins
+{
+    id 'java-library'
+}
+
+repositories
+{
+    jcenter()
+    mavenCentral()
+}
+
+configurations
+{
+    provided
+    compile.extendsFrom(provided)
+}
+
+dependencies
+{
+    provided group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
+
+    compile files("libs/Project-Poseidon-1.1.5-DMV.jar")
+    compile files("libs/PermissionsEx.jar")
+}
+
+jar
+{
+    from configurations.provided.asFileTree.files.collect { zipTree(it) }
+}
