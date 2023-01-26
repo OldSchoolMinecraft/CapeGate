@@ -20,12 +20,7 @@ public class Utils
     {
         try
         {
-            Configuration config = CapeGate.instance.getConfiguration();
-            String sql_host = config.getString("sql_host", "localhost");
-            String sql_username = config.getString("sql_username", "root");
-            String sql_password = config.getString("sql_password", "");
-
-            Connection con = DriverManager.getConnection(String.format("jdbc:mysql://%s/capegate?user=%s&password=%s", sql_host, sql_username, sql_password));
+            Connection con = CapeGate.instance.sqlPool.getConnection();
 
             PreparedStatement stmt = con.prepareStatement(statement);
 

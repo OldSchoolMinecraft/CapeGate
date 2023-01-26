@@ -11,6 +11,7 @@ import ru.tehkode.permissions.commands.Command;
 import ru.tehkode.permissions.commands.CommandListener;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Map;
 
 public class CommandHandler implements CommandListener
@@ -35,16 +36,14 @@ public class CommandHandler implements CommandListener
 
         Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, () ->
         {
-            try
+            String code = Utils.generateCode();
+
+            try (PreparedStatement stmt = Utils.prepareStatement("INSERT INTO codes (username, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = ?", "sss", ply.getName(), code, code))
             {
-                String code = Utils.generateCode();
-                PreparedStatement stmt = Utils.prepareStatement("IF EXISTS(SELECT * FROM codes WHERE username = ?) UPDATE codes SET code = ? WHERE username = ? ELSE INSERT INTO codes (username, code) VALEUS (?, ?)", "sssss", ply.getName(), code, ply.getName(), ply.getName(), code);
-                assert stmt != null;
                 stmt.execute();
                 ply.sendMessage(ChatColor.GRAY + "Your code is: " + ChatColor.GREEN + code);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                sender.sendMessage(ChatColor.RED + "Something went wrong (CC-SQL-1). If this problem persists, please contact an administrator.");
+            } catch (SQLException ex) {
+                ply.sendMessage(ChatColor.RED + "SQL Error: " + ex.getMessage());
             }
         });
     }

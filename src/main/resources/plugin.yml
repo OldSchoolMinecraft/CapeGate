@@ -2,7 +2,7 @@ name: CapeGate
 version: 0
 author: moderator_man
 main: com.oldschoolminecraft.cg.CapeGate
-depend: [PermissionsEx]
+depend: [mysql-connector, PermissionsEx]
 commands:
   changecloak:
     description: Get a cape code to use for uploading a cloak on the website.
